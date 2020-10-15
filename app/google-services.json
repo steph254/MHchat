@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "682331187338",
+    "firebase_url": "https://mhchat-9c034.firebaseio.com",
+    "project_id": "mhchat-9c034",
+    "storage_bucket": "mhchat-9c034.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682331187338:android:52d4ef9372e3f8dd182573",
+        "android_client_info": {
+          "package_name": "com.example.mhchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682331187338-p0qogldnguu50dt71tssgh7blaloag4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhyK3VtiOa-h0XDv3JcL8A9heJa40jIHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682331187338-p0qogldnguu50dt71tssgh7blaloag4q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
