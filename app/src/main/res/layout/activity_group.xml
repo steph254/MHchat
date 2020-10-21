@@ -18,7 +18,7 @@
         android:layout_below="@id/tabs"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_new_post"
+        android:id="@+id/fab_new_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

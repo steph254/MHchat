@@ -1,40 +1,38 @@
 package com.example.mhchat.models;
 
+
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@IgnoreExtraProperties
-public class Group {
-    private String groupname;
-    private String groupicon;
+public class Group extends Room{
+    public String groupname;
+    public String imageURL;
+    public ListMember listMember;
     private String key;
     private int position;
 
-    public Group() {
+    public Group(){
+        listMember = new ListMember();
     }
+
     public Group (int position){
         this.position = position;
     }
-    public Group(String groupname, String groupicon) {
+    public Group(String username, String imageUrl) {
         this.groupname = groupname;
-        this.groupicon = groupicon;
-
+        this.imageURL = imageUrl;
     }
 
     public String getGroupName() {
         return groupname;
     }
-    public void setGroupName(String groupname) {
+    public void setGroupName(String username) {
         this.groupname = groupname;
     }
-    public String getGroupIcon() {
-        return groupicon;
+    public String getImageUrl() {
+        return imageURL;
     }
-    public void setGroupIcon(String groupicon) {
-        this.groupicon = groupicon;
+    public void setImageUrl(String imageUrl) {
+        this.imageURL = imageUrl;
     }
     @Exclude
     public String getKey() {

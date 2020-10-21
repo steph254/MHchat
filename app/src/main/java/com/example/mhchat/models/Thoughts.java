@@ -5,8 +5,8 @@ import com.google.firebase.database.Exclude;
 public class Thoughts {
     private String username;
     private String imageURL;
-    private String key;
     private String thought;
+    private String key;
     private int position;
 
     public Thoughts() {

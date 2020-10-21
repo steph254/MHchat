@@ -45,7 +45,6 @@ public class DetailsActivity extends AppCompatActivity {
                 .fit()
                 .centerCrop()
                 .into(thoughtImageView);
-
     }
 
 }

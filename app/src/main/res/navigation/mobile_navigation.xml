@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/supportfragment"
-        android:name="com.example.mhchat.SupportFragment"
-        android:label="@string/support"
-        tools:layout="@layout/fragment_support" />
-
-    <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.mhchat.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"

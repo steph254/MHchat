@@ -42,7 +42,7 @@
         android:focusableInTouchMode="true">
 
         <TextView
-            android:id="@+id/icon_group"
+            android:id="@+id/icongroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_textview"
@@ -52,7 +52,7 @@
             android:textSize="30sp" />
 
         <EditText
-            android:id="@+id/editGroupName"
+            android:id="@+id/groupnameEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -67,7 +67,7 @@
         android:layout_height="1dp"
         android:background="#EEEEEE" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleListFriend"
+        android:id="@+id/recyclerListGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="10dp"

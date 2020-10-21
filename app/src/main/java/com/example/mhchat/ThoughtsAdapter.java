@@ -34,7 +34,7 @@ public  class ThoughtsAdapter extends RecyclerView.Adapter<ThoughtsAdapter.Recyc
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.row_model, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.item_thought, parent, false);
         return new RecyclerViewHolder(v);
     }
 

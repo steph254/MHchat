@@ -36,9 +36,9 @@ public class UploadActivity extends AppCompatActivity {
 
     private Button chooseImageBtn;
     private Button uploadBtn;
-    private EditText nameEditText;
-    private EditText descriptionEditText;
-    private ImageView chosenImageView;
+    private EditText usernameEditText;
+    private EditText thoughtEditText;
+    private ImageView thoughtImageView;
     private ProgressBar uploadProgressBar;
 
     private Uri mImageUri;
@@ -54,9 +54,9 @@ public class UploadActivity extends AppCompatActivity {
 
         chooseImageBtn = findViewById(R.id.button_choose_image);
         uploadBtn = findViewById(R.id.uploadBtn);
-        nameEditText = findViewById(R.id.nameEditText);
-        descriptionEditText = findViewById ( R.id.descriptionEditText );
-        chosenImageView = findViewById(R.id.chosenImageView);
+        usernameEditText = findViewById(R.id.usernameEditText);
+        thoughtEditText = findViewById ( R.id.thoughtEditText );
+        thoughtImageView = findViewById(R.id.thoughtImageView);
         uploadProgressBar = findViewById(R.id.progress_bar);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("thoughts_uploads");
@@ -95,7 +95,7 @@ public class UploadActivity extends AppCompatActivity {
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
 
-            Picasso.get().load(mImageUri).into(chosenImageView);
+            Picasso.get().load(mImageUri).into(thoughtImageView);
         }
     }
 
@@ -128,9 +128,9 @@ public class UploadActivity extends AppCompatActivity {
                             }, 500);
 
                             Toast.makeText(UploadActivity.this, "Thought  Upload successful", Toast.LENGTH_LONG).show();
-                            Thoughts upload = new Thoughts(nameEditText.getText().toString().trim(),
+                            Thoughts upload = new Thoughts(usernameEditText.getText().toString().trim(),
                                     taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
-                                    descriptionEditText.getText ().toString ());
+                                    thoughtEditText.getText ().toString ());
 
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);

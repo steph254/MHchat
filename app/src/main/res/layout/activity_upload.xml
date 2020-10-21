@@ -31,27 +31,27 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:text="Enter Teacher Details"
+                android:text="Share your thoughts"
                 android:textSize="20dp" />
 
 
             <EditText
-                android:id="@+id/nameEditText"
+                android:id="@+id/usernameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:inputType="text"
-                android:hint="Name"
+                android:hint="Username"
                 android:layout_marginLeft="16dp" />
 
             <EditText
-                android:id="@+id/descriptionEditText"
+                android:id="@+id/thoughtEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:minLines="3"
                 android:inputType="text"
-                android:hint="Description"
+                android:hint="Thought"
                 android:layout_marginLeft="16dp" />
 
 
@@ -70,7 +70,7 @@
                     android:text="Choose Image"
                     android:layout_marginLeft="16dp" />
                 <ImageView
-                    android:id="@+id/chosenImageView"
+                    android:id="@+id/thoughtImageView"
                     android:layout_width="match_parent"
                     android:layout_height="180dp" />
             </LinearLayout>

@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.mhchat.models.FriendlyMessage;
+import com.example.mhchat.models.Chat;
 import com.example.mhchat.models.User;
 import com.example.mhchat.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -35,7 +35,7 @@ public class ChatActivity extends AppCompatActivity {
 	public static final String MESSAGES_CHILD = "chat";
 
 	private DatabaseReference mFirebaseDatabaseReference;
-	private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseAdapter;
+	private FirebaseRecyclerAdapter<Chat, MessageViewHolder> mFirebaseAdapter;
 
 	private Button mSendButton;
 	private RecyclerView mMessageRecyclerView;
@@ -69,21 +69,21 @@ public class ChatActivity extends AppCompatActivity {
 		});
 
 		Query query = mFirebaseDatabaseReference.child(MESSAGES_CHILD);
-		FirebaseRecyclerOptions<FriendlyMessage> options = new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
-				.setQuery(query, FriendlyMessage.class)
+		FirebaseRecyclerOptions<Chat> options = new FirebaseRecyclerOptions.Builder<Chat>()
+				.setQuery(query, Chat.class)
 				.build();
 
-		mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
+		mFirebaseAdapter = new FirebaseRecyclerAdapter<Chat, MessageViewHolder>(options) {
 			@Override
-			protected void onBindViewHolder(@NonNull MessageViewHolder viewHolder, int position, FriendlyMessage friendlyMessage) {
-				if (friendlyMessage.getUsername().equals(mEmail)) {
+			protected void onBindViewHolder(@NonNull MessageViewHolder viewHolder, int position, Chat chat) {
+				if (chat.getUsername().equals(mEmail)) {
 					viewHolder.row.setGravity(Gravity.END);
 				} else {
 					viewHolder.row.setGravity(Gravity.START);
 				}
-				viewHolder.messageTextView.setText(friendlyMessage.getText());
-				viewHolder.messengerTextView.setText(friendlyMessage.getUsername());
-			}
+				viewHolder.usernameTextView.setText(chat.getUsername());
+				viewHolder.chatTextView.setText(chat.getText());
+		}
 
 			@Override
 			public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -96,10 +96,10 @@ public class ChatActivity extends AppCompatActivity {
 			@Override
 			public void onItemRangeInserted(int positionStart, int itemCount) {
 				super.onItemRangeInserted(positionStart, itemCount);
-				int friendlyMessageCount = mFirebaseAdapter.getItemCount();
+				int chatCount = mFirebaseAdapter.getItemCount();
 				int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-				if (lastVisiblePosition == -1 || (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+				if (lastVisiblePosition == -1 || (positionStart >= (chatCount - 1) && lastVisiblePosition == (positionStart - 1))) {
 					mMessageRecyclerView.scrollToPosition(positionStart);
 				}
 			}
@@ -130,8 +130,8 @@ public class ChatActivity extends AppCompatActivity {
 		mSendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mEmail);
-				mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+				Chat chat = new Chat(mMessageEditText.getText().toString(), mEmail);
+				mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(chat);
 				mMessageEditText.setText("");
 			}
 		});
@@ -155,14 +155,14 @@ public class ChatActivity extends AppCompatActivity {
 
 	public static class MessageViewHolder extends RecyclerView.ViewHolder {
 		LinearLayout row;
-		TextView messageTextView;
-		TextView messengerTextView;
+		TextView usernameTextView;
+		TextView chatTextView;
 
 		MessageViewHolder(View v) {
 			super(v);
 			row = itemView.findViewById(R.id.row);
-			messageTextView = itemView.findViewById(R.id.messageTextView);
-			messengerTextView = itemView.findViewById(R.id.messengerTextView);
+			usernameTextView = itemView.findViewById(R.id.usernameTextView);
+			chatTextView = itemView.findViewById(R.id.chatTextView);
 		}
 	}
 }

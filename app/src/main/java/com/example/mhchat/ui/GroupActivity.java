@@ -4,56 +4,132 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.mhchat.R;
+import com.example.mhchat.GroupsAdapter;
+import com.example.mhchat.models.Group;
+import com.example.mhchat.models.Thoughts;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-public class GroupActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class GroupActivity extends AppCompatActivity implements GroupsAdapter.OnItemClickListener {
+    private RecyclerView mRecyclerView;
+    private GroupsAdapter mAdapter;
+    private ProgressBar mProgressBar;
+    private FirebaseStorage mStorage;
+    private DatabaseReference mDatabaseRef;
+    private ValueEventListener mDBListener;
+    private List<Group> mGroups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
-        FragmentPagerAdapter mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            private final Fragment[] mFragments = new Fragment[] {
-//                    new RecentGroupFragment(),
-//                    new MyGroupsFragment(),
-            };
+        mRecyclerView = findViewById(R.id.mRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
+        mProgressBar = findViewById(R.id.myDataLoaderProgressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mGroups = new ArrayList<>();
+        mAdapter = new GroupsAdapter(GroupActivity.this, mGroups);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(GroupActivity.this);
+
+        mStorage = FirebaseStorage.getInstance();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("groups");
+
+        mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public Fragment getItem(int position) {
-                return mFragments[position];
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                mGroups.clear();
+
+                for (DataSnapshot thoughtSnapshot : dataSnapshot.getChildren()) {
+                    Group upload = thoughtSnapshot.getValue(Group.class);
+                    upload.setKey(thoughtSnapshot.getKey());
+                    mGroups.add(upload);
+                }
+                mAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.GONE);
             }
-            @Override
-            public int getCount() {
-                return mFragments.length;
-            }
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return getResources().getStringArray(R.array.headings)[position];
-            }
-        };
 
-        ViewPager mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mPagerAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(GroupActivity.this, NewPostActivity.class));
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(GroupActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
+        findViewById(R.id.fab_new_group).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(GroupActivity.this, NewGroupActivity.class));
+            }
+        });
+    }
+
+    private void openGroupInfoActivity(String[] data){
+        Intent intent = new Intent(this, GroupInfoActivity.class);
+        intent.putExtra("GROUPNAME_KEY",data[0]);
+        intent.putExtra("IMAGE_KEY",data[1]);
+        startActivity(intent);
+    }
+
+    public void onItemClick(int position) {
+        Group clickedGroup = mGroups.get(position);
+        String[] groupData = {clickedGroup.getGroupName(),clickedGroup.getImageUrl()};
+        openGroupInfoActivity(groupData);
+    }
+
+    @Override
+    public void onShowItemClick(int position) {
+        Group clickedGroup = mGroups.get(position);
+        String[] groupData = {clickedGroup.getGroupName(),clickedGroup.getImageUrl()};
+        openGroupInfoActivity(groupData);
+    }
+
+    @Override
+    public void onDeleteItemClick(int position) {
+        Group selectedItem = mGroups.get(position);
+        final String selectedKey = selectedItem.getKey();
+
+        StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());
+        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mDatabaseRef.child(selectedKey).removeValue();
+                Toast.makeText(GroupActivity.this, "Group deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabaseRef.removeEventListener(mDBListener);
     }
 
     @Override

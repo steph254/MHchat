@@ -37,13 +37,6 @@ public class ItemsActivity extends AppCompatActivity implements ThoughtsAdapter.
     private ValueEventListener mDBListener;
     private List<Thoughts> mThoughts;
 
-    private void openDetailActivity(String[] data){
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("USERNAME_KEY",data[0]);
-        intent.putExtra("THOUGHT_KEY",data[1]);
-        intent.putExtra("IMAGE_KEY",data[2]);
-        startActivity(intent);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
@@ -87,6 +80,15 @@ public class ItemsActivity extends AppCompatActivity implements ThoughtsAdapter.
         });
 
     }
+
+    private void openDetailActivity(String[] data){
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("USERNAME_KEY",data[0]);
+        intent.putExtra("THOUGHT_KEY",data[1]);
+        intent.putExtra("IMAGE_KEY",data[2]);
+        startActivity(intent);
+    }
+
     public void onItemClick(int position) {
         Thoughts clickedThought = mThoughts.get(position);
         String[] thoughtData = {clickedThought.getUserName(),clickedThought.getThought(),clickedThought.getImageUrl()};
