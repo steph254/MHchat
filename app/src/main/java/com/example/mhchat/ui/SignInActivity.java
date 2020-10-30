@@ -3,15 +3,16 @@ package com.example.mhchat.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.app.ProgressDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mhchat.models.User;
 import com.example.mhchat.R;
+import com.example.mhchat.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,9 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
-	private ProgressDialog mProgressDialog;
 	private EditText mEmailField, mPasswordField;
 	private FirebaseAuth mAuth;
+	private ProgressDialog mProgressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 		mAuth = FirebaseAuth.getInstance();
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (mAuth.getCurrentUser() != null) {
+			onAuthSuccess(mAuth.getCurrentUser());
+		}
+	}
 
 	public void showProgressDialog() {
 		if (mProgressDialog == null) {
@@ -59,14 +67,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 		return FirebaseAuth.getInstance().getCurrentUser().getUid();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		if (mAuth.getCurrentUser() != null) {
-			onAuthSuccess(mAuth.getCurrentUser());
-		}
-	}
-
 	private void onAuthSuccess(FirebaseUser firebaseUser) {
 		String email = firebaseUser.getEmail();
 		String username = email;
@@ -78,7 +78,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 		DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 		mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
 
-		startActivity(new Intent(this, GroupActivity.class));
+		Intent i = new Intent(this, MainActivity.class);
+		startActivity(i);
+		
 		finish();
 	}
 
@@ -148,4 +150,3 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 		}
 	}
 }
-
